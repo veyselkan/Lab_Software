@@ -27,4 +27,5 @@ jobs:
         
     - name: Run tests
       run: |
-        pytest --cov=cart --cov-report=term-missing
+        pytest --cov=cart --cov-report=term-missing --cov-fail-under=70
+        
