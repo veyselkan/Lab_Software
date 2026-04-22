@@ -1,0 +1,6 @@
+# Önce her şeyi engelle
+*
+
+# Sadece static klasörüne ve içindekilere izin ver
+!static/
+!static/*
