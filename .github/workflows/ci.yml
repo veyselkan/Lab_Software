@@ -30,14 +30,14 @@ jobs:
         pytest --cov=cart --cov-report=term-missing --cov-fail-under=70
 
   deploy:
-    needs: [build-and-test] # Sadece testler geçerse çalışır
-    if: github.ref == 'refs/heads/main' # Sadece main dalındaysa çalışır
+    needs: [build-and-test]
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    -  name: Deploy to Railway
-       uses: bervProject/railway-deploy@main
-       env:
-        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-       with:
-        service: "Lab_Software"
+      - uses: actions/checkout@v4
+      - name: Install Railway CLI
+        run: npm i -g @railway/cli
+      - name: Deploy to Railway
+        run: railway up --detach
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
