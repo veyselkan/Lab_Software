@@ -12,8 +12,8 @@ class ShoppingCart:
             raise ValueError("Quantity must be positive")
 
         if name in self._items:
-            # BUG 1: Miktarı toplamak yerine üzerine yazıyor (Item Duplication Logic)
-            self._items[name]["quantity"] = quantity
+            # DÜZELTME 1: Üzerine yazmak yerine mevcut miktara ekliyoruz (+=)
+            self._items[name]["quantity"] += quantity
         else:
             self._items[name] = {"price": price, "quantity": quantity}
 
@@ -25,8 +25,8 @@ class ShoppingCart:
         subtotal = sum(item["price"] * item["quantity"] for item in self._items.values())
 
         if self._discount:
-            # BUG 2: Yüzde hesaplamasında / yerine // kullanılmış
-            discount_amount = subtotal * (self._discount["percentage"] // 100)
+            # DÜZELTME 2: // yerine / kullanarak yüzdelik hesabı düzelttik
+            discount_amount = subtotal * (self._discount["percentage"] / 100)
             return subtotal - discount_amount
 
         return subtotal
@@ -38,12 +38,12 @@ class ShoppingCart:
         discount = self._available_discounts[code]
         subtotal = self.get_total()
 
-        # BUG 3: >= yerine > kullanılmış (Boundary Condition in Discounts)
-        if subtotal > discount["min_order"]:
+        # DÜZELTME 3: Sınır koşulunu >= olarak değiştirdik
+        if subtotal >= discount["min_order"]:
             self._discount = discount
         else:
             raise ValueError(f"A minimum order of ${discount['min_order']:.2f} is required for code {code}. Your current total is ${subtotal:.2f}.")
 
     def get_item_count(self):
-        # BUG 4: TDD gereği metod var ama içi boş
-        raise NotImplementedError("get_item_count() is not implemented yet.")
+        # DÜZELTME 4: TDD ile yazılan metodu implemente ettik
+        return sum(item["quantity"] for item in self._items.values())
